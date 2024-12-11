@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Extract Hardware Commands - History{% endblock %}
+
+{% block content %}
+<h1>Results History</h1>
+
+<p class="text-muted">
+    Below is a history of previously processed manuals. Each entry contains the identified hardware name and the time it was processed.
+    Only you have access to this history.
+</p>
+
+<!-- Search Form -->
+<form method="get" action="{{ url_for('history') }}">
+    <div class="input-group mb-3">
+        <input type="text" name="search" class="form-control" placeholder="Search by hardware name..." value="{{ search_query }}">
+        <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+</form>
+
+<!-- Results Table -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">
+                <a href="{{ url_for('history', sort_by='hardware_name', sort_order='asc' if sort_order == 'desc' else 'desc', search=search_query) }}">
+                    Hardware Name
+                    {% if sort_by == 'hardware_name' %}
+                        {% if sort_order == 'asc' %}
+                            <i class="bi bi-arrow-up"></i>
+                        {% else %}
+                            <i class="bi bi-arrow-down"></i>
+                        {% endif %}
+                    {% endif %}
+                </a>
+            </th>
+            <th scope="col">
+                <a href="{{ url_for('history', sort_by='timestamp', sort_order='asc' if sort_order == 'desc' else 'desc', search=search_query) }}">
+                    Time
+                    {% if sort_by == 'timestamp' %}
+                        {% if sort_order == 'asc' %}
+                            <i class="bi bi-arrow-up"></i>
+                        {% else %}
+                            <i class="bi bi-arrow-down"></i>
+                        {% endif %}
+                    {% endif %}
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if results|length == 0 %}
+            <tr>
+                <td colspan="2" class="text-center text-muted">No results found.</td>
+            </tr>
+        {% else %}
+            {% for result in results %}
+                {% set hardware_name = result['results'].get('hardware_name', 'No hardware name identified') %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('view_result', result_id=result['id']) }}">
+                            {{ hardware_name }}
+                        </a>
+                    </td>
+                    <td>{{ result['timestamp'] }}</td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}

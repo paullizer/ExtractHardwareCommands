@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Extract Hardware Commands - Provide Manual Text{% endblock %}
+
+{% block content %}
+<div class="text-center mt-5">
+    <h1 class="mb-4">Provide Your Manual Text</h1>
+    <p class="lead mb-5">
+        Please enter or paste the content of your hardware manual below.
+    </p>
+    <p class="mb-5">
+        Once you have entered your manual text, click "Next" to continue.
+    </p>
+</div>
+
+<form method="post">
+    <div class="mb-4">
+        <label for="body" class="form-label fs-4">Manual Content <span class="text-danger">*</span></label>
+        <textarea class="form-control" id="body" name="body" rows="10" placeholder="Paste the manual text here" required></textarea>
+        <div class="form-text">The more detailed the manual, the better the extraction results.</div>
+    </div>
+    <div class="text-center mt-5">
+        <button type="submit" class="btn btn-success btn-lg">Next</button>
+    </div>
+</form>
+{% endblock %}

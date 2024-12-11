@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %}Extract Hardware Commands - Your Generated Content{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="mb-4">Your Generated Results</h1>
+    <p class="lead mb-5">
+        Below you'll find the hardware name, extracted commands, and generated assets (JSON and Python script). Only you have access to this data.
+    </p>
+</div>
+
+<!-- Your Provided Content -->
+{% if body %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h2 class="card-title mb-0">Your Provided Manual Content</h2>
+    </div>
+    <div class="card-body">
+        <div class="content" id="originalContent">
+            {% set max_chars = 500 %}
+            {% if body|length > max_chars %}
+                <div class="truncated-text">{{ body[:max_chars] | markdown }}</div>
+                <div class="full-text d-none">{{ body|markdown }}</div>
+                <button class="btn btn-outline-secondary btn-sm mt-3 toggle-btn" data-target="#originalContent">Show More</button>
+            {% else %}
+                {{ body|markdown }}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if results %}
+    <!-- Hardware Name -->
+    {% if results.hardware_name %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="card-title mb-0">Identified Hardware Name</h2>
+        </div>
+        <div class="card-body">
+            <p class="card-text fs-5"><strong>{{ results.hardware_name }}</strong></p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Commands List -->
+    {% if results.commands_list %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="card-title mb-0">Extracted Commands</h2>
+        </div>
+        <div class="card-body">
+            <p class="card-text">Below is the list of extracted commands:</p>
+            <ul class="list-group">
+                {% for command in results.commands_list %}
+                    <li class="list-group-item">{{ command }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Commands JSON -->
+    {% if results.commands_json %}
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="card-title mb-0">Commands JSON</h2>
+            <a href="{{ url_for('download_json', result_id=result_id) }}" class="btn btn-primary btn-sm">Download JSON</a>
+        </div>
+        <div class="card-body" id="jsonContent">
+            {% set max_chars = 500 %}
+            {% if results.commands_json|length > max_chars %}
+                <div class="truncated-text"><pre>{{ results.commands_json[:max_chars] }}</pre></div>
+                <div class="full-text d-none"><pre>{{ results.commands_json }}</pre></div>
+                <button class="btn btn-outline-secondary btn-sm mt-3 toggle-btn" data-target="#jsonContent">Show More</button>
+            {% else %}
+                <pre>{{ results.commands_json }}</pre>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Python Script -->
+    {% if results.python_script %}
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="card-title mb-0">Python Script</h2>
+            <a href="{{ url_for('download_python', result_id=result_id) }}" class="btn btn-primary btn-sm">Download Python</a>
+        </div>
+        <div class="card-body" id="pythonContent">
+            {% set max_chars = 500 %}
+            {% if results.python_script|length > max_chars %}
+                <div class="truncated-text"><pre>{{ results.python_script[:max_chars] }}</pre></div>
+                <div class="full-text d-none"><pre>{{ results.python_script }}</pre></div>
+                <button class="btn btn-outline-secondary btn-sm mt-3 toggle-btn" data-target="#pythonContent">Show More</button>
+            {% else %}
+                <pre>{{ results.python_script }}</pre>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+{% else %}
+<p>No results to display.</p>
+{% endif %}
+
+<div class="text-center mt-5">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary btn-lg">Start Over</a>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Toggle 'Show More' logic
+        const toggleButtons = document.querySelectorAll('.toggle-btn');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const targetSelector = this.getAttribute('data-target');
+                const target = document.querySelector(targetSelector);
+                const truncated = target.querySelector('.truncated-text');
+                const full = target.querySelector('.full-text');
+                if (full.classList.contains('d-none')) {
+                    truncated.classList.add('d-none');
+                    full.classList.remove('d-none');
+                    this.textContent = 'Show Less';
+                } else {
+                    full.classList.add('d-none');
+                    truncated.classList.remove('d-none');
+                    this.textContent = 'Show More';
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

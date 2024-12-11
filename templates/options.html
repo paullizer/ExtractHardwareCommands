@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Extract Hardware Commands - Confirm Settings{% endblock %}
+
+{% block content %}
+<div class="text-center mt-5">
+    <h1 class="mb-4">Confirm Extraction Steps</h1>
+    <p class="lead mb-5">
+        You have provided content (either via text, upload, or from an existing file). 
+        We will now:
+    </p>
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-8">
+            <ul class="list-group list-group-flush text-start">
+                <li class="list-group-item">
+                    <strong>Identify the hardware name</strong> mentioned in the manual.
+                </li>
+                <li class="list-group-item">
+                    <strong>Extract a list of commands</strong> from the manual text.
+                </li>
+                <li class="list-group-item">
+                    <strong>Generate a JSON file</strong> containing these commands.
+                </li>
+                <li class="list-group-item">
+                    <strong>Generate a Python script</strong> that uses the JSON to execute the commands.
+                </li>
+            </ul>
+        </div>
+    </div>
+    <p class="mb-3">
+        Below is a small excerpt of the text we'll process:
+    </p>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card bg-light mb-5">
+                <div class="card-body text-start" style="white-space: pre-wrap; max-height: 150px; overflow:auto;">
+                    {% set excerpt_length = 300 %}
+                    {% set excerpt = body[:excerpt_length] %}
+                    {{ excerpt|safe }}{% if body|length > excerpt_length %}...{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <p class="mb-5">
+        If everything looks good, click "Generate" to proceed.
+    </p>
+</div>
+
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-transparent border-0">
+            <div class="modal-body text-center">
+                <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem;">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3 text-light">Extracting hardware name, commands, and generating files...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="post">
+    <div class="text-center mt-5">
+        <button type="submit" class="btn btn-success btn-lg">Generate</button>
+    </div>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function() {
+            const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+            loadingModal.show();
+        });
+    });
+</script>
+  
+{% endblock %}

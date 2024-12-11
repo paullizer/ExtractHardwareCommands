@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Extract Hardware Commands - Choose Content Input Method{% endblock %}
+
+{% block content %}
+<div class="text-center mt-5">
+    <h1 class="mb-4">How Would You Like to Provide Your Manual?</h1>
+    <p class="lead mb-5">
+        Choose one of the following options to input your manual. You can either write it directly, upload a file, or select one you've previously uploaded.
+    </p>
+    <h2 class="mb-4">Select an Input Method</h2>
+</div>
+<form method="post">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <!-- Provide Text Option -->
+        <div class="col">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Provide Text</h5>
+                    <p class="card-text">Manually enter the content of your hardware manual using our editor.</p>
+                    <input type="radio" class="btn-check" name="content_option" id="provide_text" value="provide_text" autocomplete="off" required>
+                    <label class="btn btn-outline-primary w-100" for="provide_text">Select</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Content Option -->
+        <div class="col">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Upload Manual</h5>
+                    <p class="card-text">
+                        Upload a TXT, MD, DOCX, or PDF file containing your manual. 
+                        Only you have access to uploaded files, stored securely and linked to your account.
+                    </p>
+                    <input type="radio" class="btn-check" name="content_option" id="upload_content" value="upload_content" autocomplete="off" required>
+                    <label class="btn btn-outline-primary w-100" for="upload_content">Select</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Select Existing File Option -->
+        <div class="col">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Select Existing File</h5>
+                    <p class="card-text">Choose a previously uploaded manual from your account history.</p>
+                    <input type="radio" class="btn-check" name="content_option" id="select_file" value="select_file" autocomplete="off" required>
+                    <label class="btn btn-outline-primary w-100" for="select_file">Select</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-5">
+        <button type="submit" class="btn btn-success btn-lg">Next</button>
+    </div>
+</form>
+
+<!-- JavaScript to Update Label Text Based on Radio Selection -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const radios = document.querySelectorAll('input[name="content_option"]');
+
+        function updateLabels() {
+            radios.forEach(function(radio) {
+                const label = document.querySelector('label[for="' + radio.id + '"]');
+                label.innerText = radio.checked ? 'Selected' : 'Select';
+            });
+        }
+
+        // Initial label update on page load
+        updateLabels();
+
+        // Add event listeners to radio buttons
+        radios.forEach(function(radio) {
+            radio.addEventListener('change', updateLabels);
+        });
+    });
+</script>
+{% endblock %}

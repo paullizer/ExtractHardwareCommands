@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Extract Hardware Commands - Upload Manual{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Upload Your Hardware Manual</h1>
+<p class="text-muted">
+    Please upload a TXT, MD, DOCX, or PDF file containing your hardware manual (e.g., for SCADA, serial, or bus-based systems). Only you have access to these files, and they are securely stored.
+</p>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="file" class="form-label fs-5">Select a file to upload (TXT, MD, DOCX, PDF)</label>
+        <input type="file" class="form-control" id="file" name="file" accept=".txt,.md,.docx,.pdf" required>
+        <div class="form-text">Ensure the file contains a hardware manual for best results.</div>
+    </div>
+    <button type="submit" class="btn btn-success btn-lg mt-3">Upload</button>
+</form>
+{% endblock %}

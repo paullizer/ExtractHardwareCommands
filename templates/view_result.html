@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}Extract Hardware Commands - View Result{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <!-- Provided Content -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>Your Provided Manual Content</h2>
+        </div>
+        <div class="card-body" id="originalContent">
+            {% if result.get('body') %}
+                {% set max_chars = 500 %}
+                {% if result['body']|length > max_chars %}
+                    <div class="truncated-text">{{ result['body'][:max_chars] | markdown }}</div>
+                    <div class="full-text d-none">{{ result['body']|markdown }}</div>
+                    <button class="btn btn-outline-secondary btn-sm mt-3 toggle-btn" data-target="#originalContent">Show More</button>
+                {% else %}
+                    {{ result['body'] | markdown }}
+                {% endif %}
+            {% else %}
+                <p class="text-muted">No original body content provided.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Hardware Name -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>Identified Hardware Name</h2>
+        </div>
+        <div class="card-body">
+            {% if result['results'].get('hardware_name') %}
+                <p class="fs-5"><strong>{{ result['results']['hardware_name'] }}</strong></p>
+            {% else %}
+                <p class="text-muted">No hardware name identified.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Extracted Commands -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>Extracted Commands</h2>
+        </div>
+        <div class="card-body">
+            {% if result['results'].get('commands_list') %}
+                <p class="card-text">Below is the list of extracted commands:</p>
+                <ul class="list-group">
+                    {% for command in result['results']['commands_list'] %}
+                        <li class="list-group-item">{{ command }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">No commands extracted.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Commands JSON -->
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Commands JSON</h2>
+            {% if result['results'].get('commands_json') %}
+                <a href="{{ url_for('download_json', result_id=result['id']) }}" class="btn btn-primary btn-sm">Download JSON</a>
+            {% endif %}
+        </div>
+        <div class="card-body" id="jsonContent">
+            {% if result['results'].get('commands_json') %}
+                {% set json_content = result['results']['commands_json'] %}
+                {% set max_chars = 500 %}
+                {% if json_content|length > max_chars %}
+                    <div class="truncated-text"><pre>{{ json_content[:max_chars] }}</pre></div>
+                    <div class="full-text d-none"><pre>{{ json_content }}</pre></div>
+                    <button class="btn btn-outline-secondary btn-sm mt-3 toggle-btn" data-target="#jsonContent">Show More</button>
+                {% else %}
+                    <pre>{{ json_content }}</pre>
+                {% endif %}
+            {% else %}
+                <p class="text-muted">No JSON data available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Python Script -->
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Python Script</h2>
+            {% if result['results'].get('python_script') %}
+                <a href="{{ url_for('download_python', result_id=result['id']) }}" class="btn btn-primary btn-sm">Download Python</a>
+            {% endif %}
+        </div>
+        <div class="card-body" id="pythonContent">
+            {% if result['results'].get('python_script') %}
+                {% set py_content = result['results']['python_script'] %}
+                {% set max_chars = 500 %}
+                {% if py_content|length > max_chars %}
+                    <div class="truncated-text"><pre>{{ py_content[:max_chars] }}</pre></div>
+                    <div class="full-text d-none"><pre>{{ py_content }}</pre></div>
+                    <button class="btn btn-outline-secondary btn-sm mt-3 toggle-btn" data-target="#pythonContent">Show More</button>
+                {% else %}
+                    <pre>{{ py_content }}</pre>
+                {% endif %}
+            {% else %}
+                <p class="text-muted">No Python script generated.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="{{ url_for('history') }}" class="btn btn-secondary btn-lg">Back to History</a>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle 'Show More' / 'Show Less' logic
+        const toggleButtons = document.querySelectorAll('.toggle-btn');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const targetSelector = this.getAttribute('data-target');
+                const target = document.querySelector(targetSelector);
+                const truncated = target.querySelector('.truncated-text');
+                const full = target.querySelector('.full-text');
+                if (full.classList.contains('d-none')) {
+                    truncated.classList.add('d-none');
+                    full.classList.remove('d-none');
+                    this.textContent = 'Show Less';
+                } else {
+                    full.classList.add('d-none');
+                    truncated.classList.remove('d-none');
+                    this.textContent = 'Show More';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

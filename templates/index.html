@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Extract Hardware Commands - Home{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="mb-4">Extract Hardware Commands</h1>
+    <p class="lead mb-5">
+        This tool helps you extract hardware commands from user manuals. Provide your manual (as text, by uploading a file, or from a previously uploaded file), and we will:
+    </p>
+    <h2 class="mb-4">What We'll Do For You</h2>
+</div>
+<form method="post">
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <!-- Identify Hardware Name -->
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Identify Hardware Name</h5>
+                    <p class="card-text">
+                        Automatically determine the name of the hardware described in the provided manual.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Extract Commands -->
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Extract Commands</h5>
+                    <p class="card-text">
+                        Extract all available commands from the hardware manual for quick reference and use.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generate JSON of Commands -->
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Generate JSON</h5>
+                    <p class="card-text">
+                        We'll create a structured JSON file listing all the extracted commands with their details.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generate Python Script -->
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Generate Python Script</h5>
+                    <p class="card-text">
+                        A Python script will be provided that uses the JSON file to execute these commands easily.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-5">
+        <button type="submit" class="btn btn-success btn-lg">Next</button>
+    </div>
+</form>
+{% endblock %}
